@@ -1,33 +1,43 @@
 import React, { useContext } from "react";
 import PageTemplate from "../components/templateWatchlistPage";
-import { MoviesContext } from "../contexts/moviesContext";
 import { useQuery } from "react-query";
-import { getMovie } from "../api/movies-api";
-import Spinner from '../components/spinner'
+import { getFavoriteMovies } from "../api/movies-api"; 
+import Spinner from '../components/spinner';
 import RemoveFromFavorites from "../components/cardIcons/removeFromFavorites";
 import WriteReview from "../components/cardIcons/writeReview";
+import { AuthContext } from "../contexts/authContext";
 
 const FavoriteMoviesPage = () => {
-  const {favorites: movieIds } = useContext(MoviesContext);
+  const { userEmail } = useContext(AuthContext);
+  const existingToken = localStorage.getItem("token");
+  const authToken = existingToken;
 
-  // Create an array of queries and run in parallel.
+  // Use a single query to fetch details for all favorite movies
   const { data: movies, error, isLoading, isError } = useQuery(
-    ["favorites", { ids: movieIds }],
+    "favorites",
     async () => {
       try {
-        const movieData = await Promise.all(
-          movieIds.map((id) => getMovie(id))
-        );
-        return movieData.filter(Boolean); // Remove any undefined entries
+        // Fetch details for all favorite movies
+        const favoriteMovies = await getFavoriteMovies(authToken, userEmail);
+        return favoriteMovies.favoriteMovies || []; // Assuming your response has a key named 'favoriteMovies'
       } catch (error) {
         throw error;
       }
     }
-  ); 
-  // Check if any of the parallel queries is still loading.
+  );
 
   if (isLoading) {
     return <Spinner />;
+  }
+
+  if (isError) {
+    console.error("Error fetching favorite movies:", error);
+    return <div>Error fetching favorite movies</div>;
+  }
+
+  if (!Array.isArray(movies)) {
+    console.error("Invalid data format for favorite movies:", movies);
+    return <div>Invalid data format for favorite movies</div>;
   }
 
   return (
@@ -35,7 +45,8 @@ const FavoriteMoviesPage = () => {
       title="Favorite Movies"
       movies={movies}
       action={(movie) => {
-        return (<>
+        return (
+          <>
             <RemoveFromFavorites movie={movie} />
             <WriteReview movie={movie} />
           </>

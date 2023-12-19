@@ -15,14 +15,7 @@ const Signup = ({ handleSignup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [registered, setRegistered] = useState(false);
   const navigate = useNavigate();
-
-  const register = async (userEmail, password) => {
-    const result = await Signup(userEmail, password);
-    console.log(result.code);
-    return result.code === 201 ? true : false;
-  };
 
   const handleSubmit = async () => {
     try {
@@ -38,10 +31,11 @@ const Signup = ({ handleSignup }) => {
   
         // Assuming `context.register` returns a boolean indicating successful registration
         const registrationSuccess = await context.register(email, password);
-  
+
+        console.log(registrationSuccess)
         if (registrationSuccess) {
           console.log('User signed up successfully.');
-          setRegistered(true);
+          //context.setRegistered(true);
           navigate('/login');
         } else {
           console.error('Error registering user.');

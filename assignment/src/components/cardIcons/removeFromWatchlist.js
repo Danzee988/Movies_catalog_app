@@ -5,25 +5,24 @@ import { MoviesContext } from "../../contexts/moviesContext";
 import { AuthContext } from '../../contexts/authContext';
 
 
-const RemoveFromFavoritesIcon = ({ movie }) => {
+const RemoveFromWatchlistIcon = ({ movie }) => {
   const context = useContext(MoviesContext);
   const { userId } = useContext(AuthContext);
 
-  const handleRemoveFromFavorites = (e) => {
+  const handleRemoveFromWatchlist = (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    console.log("movie card ", token)
-    context.removeFromFavorites(movie,token, userId);
+    context.removeFromWatchlist(movie,token, userId);
   };
   
   return (
     <IconButton
-      aria-label="remove from favorites"
-      onClick={handleRemoveFromFavorites}
+      aria-label="remove from watchlist"
+      onClick={handleRemoveFromWatchlist}
     >
       <DeleteIcon color="primary" fontSize="large" />
     </IconButton>
   );
 };
 
-export default RemoveFromFavoritesIcon;
+export default RemoveFromWatchlistIcon;

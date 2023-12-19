@@ -3,14 +3,18 @@ import { MoviesContext } from "../../contexts/moviesContext";
 import IconButton from "@mui/material/IconButton";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import Tooltip from "@mui/material/Tooltip";
+import { AuthContext } from '../../contexts/authContext';
+
 
 const AddToWatchListIcon = ({ movie }) => {
  const context = useContext(MoviesContext);
+ const { userId } = useContext(AuthContext);
 
  const handleAddToWatchList = (e) => {
     e.preventDefault();
-    context.addToWatchList(movie);
-    console.log("Added to Watch List:", movie.title);
+    const token = localStorage.getItem("token");
+    console.log("movie card ", token)
+    context.addToWatchList(movie, token, userId);
  };
 
  return (

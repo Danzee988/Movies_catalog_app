@@ -3,13 +3,17 @@ import { MoviesContext } from "../../contexts/moviesContext";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Tooltip from "@mui/material/Tooltip";
+import { AuthContext } from '../../contexts/authContext';
 
 const AddToFavoritesIcon = ({ movie }) => {
   const context = useContext(MoviesContext);
 
+  const { userId } = useContext(AuthContext);
+
   const handleAddToFavorites = (e) => {
     e.preventDefault();
-    context.addToFavorites(movie);
+    const token = localStorage.getItem("token");
+    context.addToFavorites(movie, token, userId);
   };
 
   return (

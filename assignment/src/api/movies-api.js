@@ -1,3 +1,129 @@
+//User routes----------------------------------------------------------
+const TOKEN_KEY = 'site_key';
+
+export const login = async (username, password) => {
+  try {
+    const response = await fetch('http://localhost:8080/api/users', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+      body: JSON.stringify({ username: username, password: password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // If there's an error, throw an error with a specific message
+      throw new Error(data.message || 'Login failed. Please try again.');
+    }
+
+     // Save the token to localStorage upon successful login
+     localStorage.setItem(TOKEN_KEY, data.token);
+
+    return data;
+  } catch (error) {
+    throw error; // Rethrow the error for handling in the calling code
+  }
+};
+
+
+export const signup = async (email, password) => {
+  // console.log("hello");
+    const response = await fetch('http://localhost:8080/api/users?action=register', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'post',
+        body: JSON.stringify({ username: email, password: password })
+    });
+
+    console.log(response); // Log the entire response object
+    return response.json();
+};
+
+export const logout = () => {
+  // Remove the token from local storage
+  localStorage.removeItem(TOKEN_KEY);
+};
+
+export const getAuthToken = () => {
+  // Retrieve the token from local storage
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+export const getUserDetails = async (username, authToken) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/users/user/${username}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${authToken}`, // Include the user's token for authentication
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data.user;
+    } else {
+      throw new Error(data.msg || 'Error fetching user details.');
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching user details.');
+  }
+};
+
+export const getFavoriteMovies = async (authToken, userEmail) => {
+  console.log("authToken ", authToken);
+
+  try {
+    // Make a request to your backend API endpoint that retrieves favorite movies
+    const response = await fetch(`http://localhost:8080/api/users/${userEmail}/favorite-movies`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch favorite movies');
+    }
+
+    const favoriteMovies = await response.json();
+    return favoriteMovies;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getWatchlist = async (authToken, userEmail) => {
+  console.log("authToken ", authToken);
+
+  try {
+    // Make a request to your backend API endpoint that retrieves favorite movies
+    const response = await fetch(`http://localhost:8080/api/users/${userEmail}/watchList`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch watchlist');
+    }
+
+    const watchlist = await response.json();
+    return watchlist;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//Movies routes ------------------------------------------------------------------
 export const getMovies = async () => {
   try {
     const response = await fetch('http://localhost:8080/api/movies/tmdb/movies');
@@ -62,45 +188,6 @@ export const getActorsDetails = async (person_id) => {
   } catch (error) {
     throw error; // Rethrow the error for handling in the calling code
   }
-};
-
-
-export const login = async (username, password) => {
-  try {
-    const response = await fetch('http://localhost:8080/api/users', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'post',
-      body: JSON.stringify({ username: username, password: password }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      // If there's an error, throw an error with a specific message
-      throw new Error(data.message || 'Login failed. Please try again.');
-    }
-
-    return data;
-  } catch (error) {
-    throw error; // Rethrow the error for handling in the calling code
-  }
-};
-
-
-export const signup = async (email, password) => {
-  // console.log("hello");
-    const response = await fetch('http://localhost:8080/api/users?action=register', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'post',
-        body: JSON.stringify({ username: email, password: password })
-    });
-
-    console.log(response); // Log the entire response object
-    return response.json();
 };
 
 export const getLatestMovies = async () => {

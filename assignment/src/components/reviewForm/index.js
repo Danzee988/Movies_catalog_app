@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
+import { AuthContext } from '../../contexts/authContext';
+import { MoviesContext } from "../../contexts/moviesContext";
+
+
 
 const ratings = [
   {
@@ -77,10 +81,19 @@ const ReviewForm = ({ movie }) => {
     setRating(event.target.value);
   };
 
-  const onSubmit = (review) => {
-    review.movieId = movie.id;
-    review.rating = rating;
-    console.log(review);
+
+  const context = useContext(MoviesContext);
+
+  const onSubmit = async (review) => {
+    
+    try {
+      // Send a request to your backend to add the review to the movie
+      await context.addReview({ ...review, movieId: movie.id, rating });
+      console.log('Review added successfully');
+      // You may want to update the local state or perform a redirect, etc.
+    } catch (error) {
+      console.error('Error adding review:', error.message);
+    }
   };
 
   return (

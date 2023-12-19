@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Route, Navigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -24,9 +24,6 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import { AuthContext } from "../../contexts/authContext";
 
 
-
-
-
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 const SiteHeader = ({ history }) => {
@@ -37,8 +34,17 @@ const SiteHeader = ({ history }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   
   const navigate = useNavigate();
-  const { signout, userEmail } = useContext(AuthContext);
+  const { signout, isAuthenticated } = useContext(AuthContext);
 
+  const PrivateRoute = ({ path, element }) => {
+    const { isAuthenticated } = useContext(AuthContext);
+  
+    return isAuthenticated ? (
+      <Route path={path} element={element} />
+    ) : (
+      <Navigate to="/login" />
+    );
+  };
 
   const menuOptions = [
     { icon: < HomeIcon/>, label: "Home", path: "/" },
@@ -170,7 +176,7 @@ const SiteHeader = ({ history }) => {
             </>
           )}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "auto" }}>
-            {userEmail ? (
+            {isAuthenticated ? (
               <>
                 <IconButton onClick={() => handleMenuSelect("/profile")} color="inherit">
                   <PersonIcon />
