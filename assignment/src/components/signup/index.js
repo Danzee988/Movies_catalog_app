@@ -4,8 +4,6 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-// import { auth } from '../../components/firebase'; // Make sure to import your Firebase instance
-// import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom'; // Import useHistory from React Router
 import { AuthContext } from "../../contexts/authContext";
 
@@ -29,7 +27,6 @@ const Signup = ({ handleSignup }) => {
       if (isValidPassword) {
         console.log('User password meets requirements.');
   
-        // Assuming `context.register` returns a boolean indicating successful registration
         const registrationSuccess = await context.register(email, password);
 
         console.log(registrationSuccess)
@@ -47,26 +44,9 @@ const Signup = ({ handleSignup }) => {
       }
     } catch (error) {
       console.error('Error signing up:', error.message);
-      setError(getErrorMessage(error.code) || 'An error occurred during registration. Please try again.');
+      setError(error.message || 'Signup failed. Please try again.');
     }
   };
-  
-  
-
-  const getErrorMessage = (errorCode) => {
-    switch (errorCode) {
-      case 'auth/invalid-email':
-        return 'The email entered is not a valid one. Please try again.';
-      case 'auth/weak-password':
-        return 'The password should be at leat 6 characters. Please try again.';
-      case 'auth/email-already-in-use':
-        return 'The email  already belongs to an account. Please try to login or try again.';
-      default:
-        return 'An error occurred. Please try again later.';
-    }
-  };
-
-  
 
   return (
     <Card style={{ maxWidth: 400, margin: 'auto', marginTop: 50 }}>
