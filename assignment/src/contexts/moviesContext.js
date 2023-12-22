@@ -12,6 +12,7 @@ const MoviesContextProvider = (props) => {
 
 
   const addToFavorites = async (movie, token) => {
+    let newFavorites = [];
     try {
       // Make an API call to add the movie to the user's favorites on the server
       const response = await fetch(`http://localhost:8080/api/users/addFavorites`, {
@@ -25,7 +26,13 @@ const MoviesContextProvider = (props) => {
   
       if (response.ok) {
         // If the API call is successful, update the local state
-        setFavorites([...favorites, movie.id]);
+        if (!favorites.includes(movie.id)){
+          newFavorites = [...favorites, movie.id];
+        }
+        else{
+          newFavorites = [...favorites];
+        }
+        setFavorites(newFavorites)
       } else {
         // If the API call is not successful, extract and handle the error message
         const errorData = await response.json();
@@ -68,6 +75,7 @@ const MoviesContextProvider = (props) => {
   };
   
   const addToWatchList = async (movie, token) => {
+    let newWatchList = [];
     try {
       // Make an API call to add the movie to the user's favorites on the server
       const response = await fetch(`http://localhost:8080/api/users/addWatchList`, {
@@ -81,7 +89,13 @@ const MoviesContextProvider = (props) => {
   
       if (response.ok) {
         // If the API call is successful, update the local state
-        setWatchList([...watchList, movie.id]);
+        if (!watchList.includes(movie.id)){
+          newWatchList = [...watchList, movie.id];
+        }
+        else{
+          newWatchList = [...watchList];
+        }
+        setWatchList(newWatchList)
       } else {
         // If the API call is not successful, extract and handle the error message
         const errorData = await response.json();
@@ -123,37 +137,38 @@ const MoviesContextProvider = (props) => {
     }
   };
 
-  const addReview = async (review, token) => {
-    try {
-      // Make an API call to add the movie to the user's favorites on the server
-      const response = await fetch(`http://localhost:8080/api/users/addReview`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${token}`,
-        },
-        body: JSON.stringify({ review, user: userId }), // Pass movieId in the request body
-      });
+  // const addReview = async (review, token) => {
+  //   try {
+  //     // Make an API call to add the movie to the user's favorites on the server
+  //     const response = await fetch(`http://localhost:8080/api/users/addReview`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `${token}`,
+  //       },
+  //       body: JSON.stringify({ review, user: userId }), // Pass movieId in the request body
+  //     });
   
-      if (response.ok) {
-        // If the API call is successful, update the local state
-        setMyReviews([...myReviews, review.id]);
-      } else {
-        // If the API call is not successful, extract and handle the error message
-        const errorData = await response.json();
-        const errorMessage = errorData.msg || 'Failed to add movie to favorites';
+  //     if (response.ok) {
+  //       // If the API call is successful, update the local state
+  //       setMyReviews([...myReviews, review.id]);
+  //     } else {
+  //       // If the API call is not successful, extract and handle the error message
+  //       const errorData = await response.json();
+  //       const errorMessage = errorData.msg || 'Failed to add movie to favorites';
         
-        // Handle the error, e.g., display an error message
-        console.error('Failed to add movie to favorites:', errorMessage);
-      }
-    } catch (error) {
-      console.error('Error adding movie to favorites:', error.message);
-    }
-  };
-
-  // const addReview = (movie, review) => {
-  //   setMyReviews( {...myReviews, [movie.id]: review } )
+  //       // Handle the error, e.g., display an error message
+  //       console.error('Failed to add movie to favorites:', errorMessage);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding movie to favorites:', error.message);
+  //   }
   // };
+
+  const addReview = (movie, review) => {
+    console.log("Hello constext")
+    setMyReviews( {...myReviews, [movie.id]: review } )
+  };
 
   return (
     <MoviesContext.Provider

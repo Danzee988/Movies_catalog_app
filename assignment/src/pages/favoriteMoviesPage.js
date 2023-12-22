@@ -1,25 +1,37 @@
 import React, { useContext } from "react";
 import PageTemplate from "../components/templateWatchlistPage";
 import { useQuery } from "react-query";
-import { getFavoriteMovies } from "../api/movies-api"; 
+import { getFavoriteMovies, getMovie } from "../api/movies-api"; 
 import Spinner from '../components/spinner';
 import RemoveFromFavorites from "../components/cardIcons/removeFromFavorites";
 import WriteReview from "../components/cardIcons/writeReview";
 import { AuthContext } from "../contexts/authContext";
+import { MoviesContext } from "../contexts/moviesContext";
 
 const FavoriteMoviesPage = () => {
   const { userEmail } = useContext(AuthContext);
   const existingToken = localStorage.getItem("token");
   const authToken = existingToken;
+  const {favorites: movieIds } = useContext(MoviesContext);
+  // console.log("favorites ", movieIds)
 
-  // Use a single query to fetch details for all favorite movies
+
   const { data: movies, error, isLoading, isError } = useQuery(
-    "favorites",
+    ["favorites", { ids: movieIds }],
     async () => {
       try {
-        // Fetch details for all favorite movies
-        const favoriteMovies = await getFavoriteMovies(authToken, userEmail);
-        return favoriteMovies.favoriteMovies || []; // Assuming your response has a key named 'favoriteMovies'
+        if (!movieIds === 0) {
+          console.log("favorites ", movieIds)
+          // Fetch details for each favorite movie using getMovie
+          const movieData = await Promise.all(
+            movieIds.map((id) => getMovie(id))
+          );
+          return movieData.filter(Boolean); // Remove any undefined entries
+        } else {
+          // Fetch details for all favorite movies using getFavoriteMovies
+          const favoriteMovies = await getFavoriteMovies(authToken, userEmail);
+          return favoriteMovies.favoriteMovies || [];
+        }
       } catch (error) {
         throw error;
       }

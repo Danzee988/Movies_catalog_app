@@ -11,8 +11,6 @@ const TemplateMoviePage = ({ movie, children }) => {
     ["images", { id: movie.id }],
     () => getMovieImages(movie.id)
   );
-  console.log("oh ", movie)
-
 
   if (isLoading) {
     return <Spinner />;
@@ -22,8 +20,6 @@ const TemplateMoviePage = ({ movie, children }) => {
     return <h1>{error.message}</h1>;
   }
   const firstImage = data.posters ? data.posters.slice(1, 4) : [];
-
-  console.log("movie images ", data)
 
   return (
     <>

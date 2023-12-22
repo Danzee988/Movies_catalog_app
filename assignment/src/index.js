@@ -22,7 +22,6 @@ import ActorsMoviesPage from "./pages/actorsDetailsPage";
 import Login from "./components/login"
 import Signup from "./components/signup"
 import AuthContextProvider from "./contexts/authContext";
-import { AuthContext } from "./contexts/authContext";
 import ProtectedRoutes from "./protectedRoutes";
 
 

@@ -5,21 +5,47 @@ import Spinner from '../components/spinner'
 import RemoveFromWatchlist from "../components/cardIcons/removeFromWatchlist";
 import WriteReview from "../components/cardIcons/writeReview";
 import { AuthContext } from "../contexts/authContext";
-import { getWatchlist } from "../api/movies-api"; 
+import { MoviesContext } from "../contexts/moviesContext";
+import { getWatchlist, getMovie } from "../api/movies-api"; 
 
 const WatchListPage = () => {
   const { userEmail } = useContext(AuthContext);
   const existingToken = localStorage.getItem("token");
   const authToken = existingToken;
+  const {watchList: movieIds } = useContext(MoviesContext);
+  // console.log("watchlist ", movieIds)
 
   // Use a single query to fetch details for all favorite movies
+  // const { data: movies, error, isLoading, isError } = useQuery(
+  //   "watchlist",
+  //   async () => {
+  //     try {
+  //       // Fetch details for all favorite movies
+  //       const watchlist = await getWatchlist(authToken, userEmail);
+  //       return watchlist.watchlist || []; 
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   }
+  // );
+
   const { data: movies, error, isLoading, isError } = useQuery(
-    "watchlist",
+    ["watchList", { ids: movieIds }],
     async () => {
       try {
-        // Fetch details for all favorite movies
-        const watchlist = await getWatchlist(authToken, userEmail);
-        return watchlist.watchlist || []; 
+        if (!movieIds === 0) {
+          console.log("watchlist ", movieIds)
+
+          // Fetch details for each favorite movie using getMovie
+          const movieData = await Promise.all(
+            movieIds.map((id) => getMovie(id))
+          );
+          return movieData.filter(Boolean); // Remove any undefined entries
+        } else {
+          // Fetch details for all favorite movies using getFavoriteMovies
+          const watchList = await getWatchlist(authToken, userEmail);
+          return watchList.watchlist || [];
+        }
       } catch (error) {
         throw error;
       }
