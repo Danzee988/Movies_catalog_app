@@ -39,6 +39,7 @@ const AuthContextProvider = (props) => {
   };
 
   const register = async (email, password) => {
+    console.log("Hello")
     const result = await signup(email, password);
     return (result.success === true) ? true : false;
   };

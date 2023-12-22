@@ -1,62 +1,91 @@
-# Assignment 1 - ReactJS app.
+# Assignment 2 - Web API.
 
 Name: Daniel Wolski
 
-## Overview.
+## Features.
 
-[A brief statement on the content of this repository.]
-This is a movies database website. The website provides information about movies, such as upcoming, popular, latest added movies, the user is able to save movies into a favourits and watch lists, also the user can check the most popular actors and movies. There is a seperate page for each movie where the user can find detailed information about the movie and the cast that is in the movie, also each movie details page has several external links that lead to that movies external pages such as IMDB or Instagram pages, each cast member has their own details page which the user can access by clicking the actors image, on the actors details page the user can find things like the actors date of birth, their bibliograph and the movies that the actor has plaied in. 
-
-### Features.
-[ A bullet-point list of the __new features__ you added to the Movies Fan app (and any modifications to existing features) .]
+A bullet-point list of the ADDITIONAL features you have implemented in the API **THAT WERE NOT IN THE LABS** (or modifications to existing features)
  
-+ Get recommendations button added to the movie card, returns movie recommendations based on the movie the    button was clicked on.
-+ Latest movies added to the siteheader
-+ Popular movies added to the siteheader, returns the currently most popular movies
-+ Trending menu added to the siteheader, returns two options a "Trending Actors" which displays a page of the top 20 actors of that day, the second option is "Trending Movies" which return the top 20 movies for that day 
-+ Added several external links to the movies details page
-+ On the movie details page a list with the most paid actors for that movie is displayed, when clicking on the actors image it opens up that actors details page.
-+ Beside the list of actors there is a "View More" button which leads to the full cast of that movie.
-+ In the actors page there is information about the actor and all the movies that actor was casted in.
-+ In the filters card a vote average filter has been added which displays movies that range in the selected vote average.
-+ In the filter card a sort order has been added that sorts the displayed movies depending on which option the user has selected
-+ In every page displaying movies im using pagination where I specify the number of movies to display
-+ Creation and login of an account with the use of firebase
+ + User sign - the user has to provide an email and password and then those are saved in a collection in mongo atlas.
+ + User login - the user types in their email and password which is then used for authentication and user data is retrived.
+ + Add a movie to favorits - the user is able to add a movie to a favorits list that is stored on the mongo atlas database.
+ + Remove a movie from favorits - the user is able to remove a movie from their favorits list that is stored on the mongo atlas database.
+ + Add a movie to watchlist - the user is able to add a movie to a watchlist that is stored on the mongo atlas database.
+ + Remove a movie from watchlist - the user is able to remove a movie from their watchlist that is stored on the mongo atlas database.
+ + Favorite movies been fetched from the database.
+ + Movies for the watchlist are been fetched from the database.
+ + Routes for watchlist and favorites are protected, when a not logged in user clicks on them they get redirected to teh login page.
+ + All routes are going the my api and then to the tmdb database.
 
 ## Setup requirements.
 
 [ Outline any non-standard setup steps necessary to run your app locally after cloning the repo.]
 
-## API endpoints.
+## API Configuration
 
-[ List the __additional__ TMDB endpoints used, giving the description and pathname for each one.] 
+Describe any configuration that needs to take place before running the API. For example, creating an `.env` file and what variables to put in it. Give an example of how this might be done.
 
+REMEMBER: DON'T PUT YOUR OWN USERNAMES/PASSWORDS/AUTH KEYS IN THE README OR ON GITHUB, just placeholders as indicated below:
 
-+ Movie recommendations - /movies/:id/recommendations
-+ Latest movies - /movies/latest
-+ Popular movies - /movies/popular
-+ A page with all the actors cast in the movie - /movies/:id/actors
-+ Top actors trending today - /actors/trending/day
-+ top movies trending today - /movies/trending/day
-+ Details about a specific actor - /movies/:id/actors/:actorsid
+______________________
 
+NODE_ENV=development
+PORT=8080
+HOST=localhost
+MONGO_DB=MongoURL
+REACT_APP_TMDB_KEY= TMDB key
+SECRET=JWTSecret
+______________________
 
-## Routing.
+## API Design
+Give an overview of your web API design, perhaps similar to the following: 
 
-[ List the __new routes__ supported by your app and state the associated page.]
+- /tmdb/movies | GET | Retrieves a list of movies from TMDB. 
+- /tmdb/genres | GET | Retrieves a list of movie genres from TMDB.
+- /tmdb/actors/:person_id/movies | GET | Retrieves a list of movies associated with a specific actor identified by person_id.
+- /tmdb/actors/:person_id/details | GET | Retrieves details about a specific actor identified by person_id.
+- /tmdb/actors/:person_id/details | GET | Retrieves details about a specific movie identified by movieId.
+- /tmdb/latest | GET | Retrieves a list of the latest movies from TMDB.
+- /tmdb/actors/:id/images | GET | Retrieves images associated with a specific actor identified by id.
+- /tmdb/:id/credits | GET | Retrieves credits for a specific movie identified by id.
+- /tmdb/movie/:id | GET | Retrieves details about a specific movie identified by id.
+- /tmdb/:id/recommendations | GET | Retrieves movie recommendations based on a specific movie identified by id.
+- /tmdb/movies/popular | GET | Retrieves a list of popular movies from TMDB.
+- /tmdb/trending/actors | GET | Retrieves a list of trending actors from TMDB.
+- /tmdb/trending/movies | GET | Retrieves a list of trending movies from TMDB.
+- /tmdb/movies/upcoming | GET | Retrieves a list of upcoming movies from TMDB.
+- /tmdb/movies/:sort_by | GET | Retrieves a list of movies sorted based on the specified criteria.
+- /tmdb/:id/reviews | GET |  Retrieves reviews for a specific movie identified by id.
+- /tmdb/:id/externalID | GET | Retrieves external IDs for a specific movie identified by id.
+- /tmdb/:id/images | GET |  Retrieves images associated with a specific movie identified by id. 
+- / | GET | Retrieves a list of all users.
+- /user/:username | GET | Retrieves details of a user by their username.
+- / | POST | Creates a new user if the action is 'register' or authenticates a user if the action is 'login'.
+- /:id | PUT | Updates user information by user ID.
+- /addFavorites | POST | Adds a movie to the user's favorites list.
+- /:userEmail/favorite-movies | GET | Retrieves the list of favorite movies for a specific user.
+- /addWatchList | POST | Adds a movie to the user's watchlist.
+- /removeWatchlist | POST | Removes a movie from the user's watchlist.
+- /:userEmail/watchList | GET |  Retrieves the user's watchlist.
+- /addReview | POST | Adds a review for a movie.
 
-+ Displays recommended movies in respect to the movie selected- /movies/:id/recommendations 
-+ Displays the latest movies - /movies/latest 
-+ Displays a list of popular movies - /movies/popular
-+ A page with all the actors cast in the movie - /movies/:id/actors
-+ Top actors trending today - /actors/trending/day
-+ top movies trending today - /movies/trending/day
-+ Details about a specific actor - /movies/:id/actors/:actorsid
+## Security and Authentication
 
-[If relevant, state what aspects of your app are protected (i.e. require authentication) and what is public.]
+Give details of authentication/security implemented on the API (e.g. passport/sessions). Indicate which routes are protected.
+- The code uses the jsonwebtoken library to generate a JWT token upon successful authentication.
+- The generated token is included in the response for successful authentication.
+- This token can be used for subsequent requests to authenticate and authorize the user.
 
-## Independent learning (If relevant).
+- User registration and authentication are handled in the / route (POST method).
+- The authenticateUser function is responsible for checking the user's credentials and generating a JWT token upon successful authentication.
 
-Itemize the technologies/techniques you researched independently and adopted in your project, 
-i.e. aspects not covered in the lectures/labs. Include the source code filenames that illustrate these 
-(we do not require code excerpts) and provide references to the online resources that helped you (articles/blogs).
+- The  updating a user /put/:id, adding/removing favorites /addFavorites, /removeFavorites and adding/removing from the watchlist /addWatchList, /removeWatchlist are protected as they require authentication before they can be performed.
+- The "/movies/favorites" and "/movies/watchList" are protected, before a user can access them they have to login 
+
+## Integrating with React App
+
+- The react components of the Web App make HTTP requests to the api endpoints using the tool 'fetch'
+- The react app uses reacts state management to handle the data that it recives from my api.
+- The information displayed in each view is retrived from my api which fetches the information from the tmdb database.
+- The signIn and login make api requests to their corresponding routes in my api.
+- My api make requests to the tmdb database for fetching data about the movies.

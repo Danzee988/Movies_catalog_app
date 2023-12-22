@@ -15,7 +15,6 @@ export const getMovies = () => {
       throw error;
     });
   };
-
   export const getMoviesSorted = (sort_by) => {
     return fetch(
       `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&include_adult=false&include_video=true&language=en-US&page=1${sort_by=sort_by}`
