@@ -1,91 +1,147 @@
-# Assignment 2 - Web API.
+# 🎬 Movies Catalog App
 
-Name: Daniel Wolski
+This project is a full-stack movie web app powered by React and a custom Express-based API that fetches and serves movie data from The Movie Database (TMDB). It supports user authentication, personalized watchlists, reviews, and favorites — all backed by MongoDB Atlas.
 
-## Features.
+## 🧠 Features (API-only)
+- ✅ User registration: Stores user email and password securely in MongoDB Atlas.
+- 🔐 User login & authentication: Authenticates user credentials and returns a JWT token.
+- ❤️ Add/remove favorite movies: Stored in the user's document in MongoDB.
+- 📋 Add/remove watchlist movies: Managed via a protected list in MongoDB.
+- 📡 Favorites & watchlist retrieval: Securely fetches user-specific data.
+- 🚫 Protected routes: Unauthorized users are redirected to the login page.
+- 🌐 TMDB proxy routing: All movie-related data is first routed through my custom API before going to TMDB.
 
-A bullet-point list of the ADDITIONAL features you have implemented in the API **THAT WERE NOT IN THE LABS** (or modifications to existing features)
- 
- + User sign - the user has to provide an email and password and then those are saved in a collection in mongo atlas.
- + User login - the user types in their email and password which is then used for authentication and user data is retrived.
- + Add a movie to favorits - the user is able to add a movie to a favorits list that is stored on the mongo atlas database.
- + Remove a movie from favorits - the user is able to remove a movie from their favorits list that is stored on the mongo atlas database.
- + Add a movie to watchlist - the user is able to add a movie to a watchlist that is stored on the mongo atlas database.
- + Remove a movie from watchlist - the user is able to remove a movie from their watchlist that is stored on the mongo atlas database.
- + Favorite movies been fetched from the database.
- + Movies for the watchlist are been fetched from the database.
- + Routes for watchlist and favorites are protected, when a not logged in user clicks on them they get redirected to teh login page.
- + All routes are going the my api and then to the tmdb database.
+## 🧭 Pages Overview (React Frontend)
+| Page                    | Route                         | Description                                 |
+| ----------------------- | ----------------------------- | ------------------------------------------- |
+| 🏠 Home                 | `/`                           | Discover popular movies                     |
+| ⭐ Popular Movies        | `/popular`                    | Shows a list of popular movies              |
+| 🎬 Trending Movies      | `/trending-movies`            | Displays trending movies                    |
+| 🎭 Trending Actors      | `/trending-actors`            | Displays trending actors                    |
+| 🧑 Actor Movies         | `/actors/:id`                 | Details and movie list for a selected actor |
+| 🎥 Movie Detail         | `/movies/:id`                 | Detailed info about a selected movie        |
+| 🧾 Movie Credits        | `/movies/:id/cast`            | Cast and crew for the movie                 |
+| ✨ Movie Recommendations | `/movies/:id/recommendations` | Recommends similar movies                   |
+| 📅 Upcoming Movies      | `/upcoming`                   | Lists upcoming releases                     |
+| 🕵️ Latest Movies       | `/latest`                     | Fetches the latest movie release            |
+| ❤️ Favorite Movies      | `/favorites`                  | User’s favorite movies                      |
+| ⏳ Watchlist             | `/watchlist`                  | User’s watchlist                            |
+| ✍️ Write Review         | `/reviews/form`               | Submit a review for a movie                 |
+| 📖 Read Review          | `/reviews/:id`                | View a user’s review                        |
 
-## Setup requirements.
+## 🛠️ Tech Stack
+### 🔧 Backend (API)
+- Node.js + Express
+- MongoDB Atlas via Mongoose
+- JWT (jsonwebtoken) for authentication
+- dotenv for environment configs
+- TMDB API integration
 
-[ Outline any non-standard setup steps necessary to run your app locally after cloning the repo.]
+### 🎨 Frontend
+- React 18
+- React Router DOM
+- React Query
+- Context API
+- Tailwind CSS (or similar)
+- LocalStorage
 
-## API Configuration
+## ⚙️ Setup Requirements
+### ✅ Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas account
+- TMDB API key
 
-Describe any configuration that needs to take place before running the API. For example, creating an `.env` file and what variables to put in it. Give an example of how this might be done.
+## 🧾 Installation (Frontend & Backend)
+1. Clone the repository
+- ```git clone https://github.com/your-username/movies-catalog.git```
+- ```cd movies-catalog```
+2. Install frontend dependencies
+- ```npm install```
 
-REMEMBER: DON'T PUT YOUR OWN USERNAMES/PASSWORDS/AUTH KEYS IN THE README OR ON GITHUB, just placeholders as indicated below:
+3. (in /api or /server folder)
+- ```cd api```
+- ```npm install```
 
-______________________
+3. Start the frontend
+- ```npm start```
 
+4. Start the backend (in /api)
+- ```npm run dev```
+
+## ⚙️ API Configuration
+Before running the backend, create a .env file in your /api directory with the following variables:
+```
 NODE_ENV=development
 PORT=8080
 HOST=localhost
-MONGO_DB=MongoURL
-REACT_APP_TMDB_KEY= TMDB key
-SECRET=JWTSecret
-______________________
+MONGO_DB=mongodb+srv://<your-mongo-uri>
+REACT_APP_TMDB_KEY=<your-tmdb-key>
+SECRET=<your-jwt-secret>
+```
 
-## API Design
-Give an overview of your web API design, perhaps similar to the following: 
+## 🌐 API Design
+| Endpoint                          | Method | Description                      |
+| --------------------------------- | ------ | -------------------------------- |
+| `/tmdb/movies`                    | GET    | Fetches a list of movies         |
+| `/tmdb/genres`                    | GET    | Returns movie genres             |
+| `/tmdb/actors/:person_id/movies`  | GET    | Gets movies for a specific actor |
+| `/tmdb/actors/:person_id/details` | GET    | Gets actor details               |
+| `/tmdb/movie/:id`                 | GET    | Gets movie details               |
+| `/tmdb/:id/credits`               | GET    | Gets movie credits               |
+| `/tmdb/:id/recommendations`       | GET    | Movie recommendations            |
+| `/tmdb/:id/reviews`               | GET    | Movie reviews                    |
+| `/tmdb/:id/externalID`            | GET    | External IDs                     |
+| `/tmdb/:id/images`                | GET    | Movie images                     |
+| `/tmdb/actors/:id/images`         | GET    | Actor images                     |
+| `/tmdb/latest`                    | GET    | Latest movie                     |
+| `/tmdb/trending/actors`           | GET    | Trending actors                  |
+| `/tmdb/trending/movies`           | GET    | Trending movies                  |
+| `/tmdb/movies/popular`            | GET    | Popular movies                   |
+| `/tmdb/movies/upcoming`           | GET    | Upcoming movies                  |
+| `/tmdb/movies/:sort_by`           | GET    | Movies by sorting criteria       |
 
-- /tmdb/movies | GET | Retrieves a list of movies from TMDB. 
-- /tmdb/genres | GET | Retrieves a list of movie genres from TMDB.
-- /tmdb/actors/:person_id/movies | GET | Retrieves a list of movies associated with a specific actor identified by person_id.
-- /tmdb/actors/:person_id/details | GET | Retrieves details about a specific actor identified by person_id.
-- /tmdb/actors/:person_id/details | GET | Retrieves details about a specific movie identified by movieId.
-- /tmdb/latest | GET | Retrieves a list of the latest movies from TMDB.
-- /tmdb/actors/:id/images | GET | Retrieves images associated with a specific actor identified by id.
-- /tmdb/:id/credits | GET | Retrieves credits for a specific movie identified by id.
-- /tmdb/movie/:id | GET | Retrieves details about a specific movie identified by id.
-- /tmdb/:id/recommendations | GET | Retrieves movie recommendations based on a specific movie identified by id.
-- /tmdb/movies/popular | GET | Retrieves a list of popular movies from TMDB.
-- /tmdb/trending/actors | GET | Retrieves a list of trending actors from TMDB.
-- /tmdb/trending/movies | GET | Retrieves a list of trending movies from TMDB.
-- /tmdb/movies/upcoming | GET | Retrieves a list of upcoming movies from TMDB.
-- /tmdb/movies/:sort_by | GET | Retrieves a list of movies sorted based on the specified criteria.
-- /tmdb/:id/reviews | GET |  Retrieves reviews for a specific movie identified by id.
-- /tmdb/:id/externalID | GET | Retrieves external IDs for a specific movie identified by id.
-- /tmdb/:id/images | GET |  Retrieves images associated with a specific movie identified by id. 
-- / | GET | Retrieves a list of all users.
-- /user/:username | GET | Retrieves details of a user by their username.
-- / | POST | Creates a new user if the action is 'register' or authenticates a user if the action is 'login'.
-- /:id | PUT | Updates user information by user ID.
-- /addFavorites | POST | Adds a movie to the user's favorites list.
-- /:userEmail/favorite-movies | GET | Retrieves the list of favorite movies for a specific user.
-- /addWatchList | POST | Adds a movie to the user's watchlist.
-- /removeWatchlist | POST | Removes a movie from the user's watchlist.
-- /:userEmail/watchList | GET |  Retrieves the user's watchlist.
-- /addReview | POST | Adds a review for a movie.
+## 🧑 User Management
+| Endpoint          | Method | Description       |
+| ----------------- | ------ | ----------------- |
+| `/`               | GET    | Get all users     |
+| `/user/:username` | GET    | Get specific user |
+| `/`               | POST   | Register or Login |
+| `/:id`            | PUT    | Update user info  |
 
-## Security and Authentication
+## 💾 Favorites & Watchlist
+| Endpoint                      | Method | Description           |
+| ----------------------------- | ------ | --------------------- |
+| `/addFavorites`               | POST   | Add to favorites      |
+| `/:userEmail/favorite-movies` | GET    | Get user's favorites  |
+| `/addWatchList`               | POST   | Add to watchlist      |
+| `/removeWatchlist`            | POST   | Remove from watchlist |
+| `/:userEmail/watchList`       | GET    | Get user's watchlist  |
 
-Give details of authentication/security implemented on the API (e.g. passport/sessions). Indicate which routes are protected.
-- The code uses the jsonwebtoken library to generate a JWT token upon successful authentication.
-- The generated token is included in the response for successful authentication.
-- This token can be used for subsequent requests to authenticate and authorize the user.
+## 🔐 Security & Authentication
+- JWT authentication using jsonwebtoken
+- On successful login, users receive a token
+- Token is required in headers for protected routes
 
-- User registration and authentication are handled in the / route (POST method).
-- The authenticateUser function is responsible for checking the user's credentials and generating a JWT token upon successful authentication.
+| Route               | Access Requirement |
+| ------------------- | ------------------ |
+| `/addFavorites`     | Authenticated only |
+| `/addWatchList`     | Authenticated only |
+| `/removeWatchlist`  | Authenticated only |
+| `/movies/watchList` | Authenticated only |
+| `/movies/favorites` | Authenticated only |
+| `/put/:id`          | Authenticated only |
 
-- The  updating a user /put/:id, adding/removing favorites /addFavorites, /removeFavorites and adding/removing from the watchlist /addWatchList, /removeWatchlist are protected as they require authentication before they can be performed.
-- The "/movies/favorites" and "/movies/watchList" are protected, before a user can access them they have to login 
+## 🔁 React API Integration
+- React fetches all data through your custom API, not directly from TMDB
+- State is managed via React Context and React Query
+- All user-related features (favorites, watchlist) interact with the backend API
+- SignIn and Login pages call your own backend's POST / for auth
+- Token is stored in localStorage for persistent sessions
 
-## Integrating with React App
-
-- The react components of the Web App make HTTP requests to the api endpoints using the tool 'fetch'
-- The react app uses reacts state management to handle the data that it recives from my api.
-- The information displayed in each view is retrived from my api which fetches the information from the tmdb database.
-- The signIn and login make api requests to their corresponding routes in my api.
-- My api make requests to the tmdb database for fetching data about the movies.
+## 🧪 Future Enhancements
+- ✅ Pagination support
+- 🔎 Full-text movie search
+- 🌙 Dark/light theme toggle
+- 📱 Mobile responsiveness
+- 📊 User stats dashboard
+- 🧪 Add unit tests for API and frontend
